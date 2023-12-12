@@ -20,16 +20,35 @@ screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 
 pygame.display.set_caption("MineSweeper")
 
+font = pygame.font.Font(None, CELL_SIZE)
+text_surface = font.render('8', True, (255, 255, 255))
+text_rect = text_surface.get_rect()
+
+rendered_chars = []
 cells = []
 
 
 def create_cells():
-    """This function is meant to initialy generate all the cells and create the boundaries"""
+    """This function is meant to initially generate all the cells and create the boundaries"""
+    x = 0
+    y = 0
+    width = CELL_SIZE
+    height = CELL_SIZE
+    
+    for _column in range(amount_of_cells):
+        for _row in range(amount_of_cells):
+            cell = Cell(x,y,width,height,bomb_chance)
+            cells.append(cell)
+            x += width
+
+        y += height
+        x = 0
+   
     # This is a good base to go from (think about it thoroughly before you code!! We want to create 16x16 list with each object being a cell):
-    # for a_row in range(amount_of_cells):
-    #     row = []
-    #     for a_column in range(amount_of_cells):
-    #         pass
+    #for a_row in range(amount_of_cells):
+     #   row = []
+      #  for a_column in range(amount_of_cells):
+       #     pass
 
     pass
 
@@ -37,18 +56,61 @@ def create_cells():
 def draw_cells():
     """In this function we want to draw each cell, i.e call upon each cells .draw() method!"""
     # Hint: take inspiration from the forloop in create_cells to loop over all the cells
+    for cell in cells:
+         cell.draw(screen)
+
+
+def draw_bombs():
     pass
+
+
+def draw_character_in_cell():
+    """Draws a number in a cell"""
+    # få mitten av cellen : 
+    
+    for text_surface, text_rect in rendered_chars:
+        #cell_center_x = cells[0] + CELL_SIZE // 2
+        #cell_center_y = cells[1] + CELL_SIZE // 2
+        #cell_center = cell_center_x + cell_center_y
+        screen.blit(text_surface, text_rect)
+
 
 
 def draw():
     """This function handles all the drawings to the screen, such as drawing rectangles, objects etc"""
+    screen.fill((0, 0, 0))
     draw_cells()
+    draw_character_in_cell()
+    
+   
+
+
+def cacl_cell_pos(mouse_pos):
+    """This function calculates the cell position of the mouse"""
+    x = mouse_pos[0] // CELL_SIZE
+    y = mouse_pos[1] // CELL_SIZE 
+    draw_character_in_cell(cells[x,y])
+    
+    #return cells[x,y]
+
+    pass
 
 
 def event_handler(event):
     """This function handles all events in the program"""
     if event.type == pygame.QUIT:
         terminate_program()
+    
+    if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
+        clicked_x, clicked_y = pygame.mouse.get_pos()
+        text_rect.centerx = clicked_x
+        text_rect.centery = clicked_y
+
+        rendered_chars.append((text_surface, text_rect.copy()))
+
+        print(clicked_x, clicked_y)
+        #cacl_cell_pos(mouse_pos)
+        #draw_cells(mouse_pos)
 
 
 def run_setup():
@@ -66,7 +128,7 @@ def main():
     run_setup()
 
     while True:
-        screen.fill((0, 0, 0))
+
 
         for event in pygame.event.get():
             event_handler(event)

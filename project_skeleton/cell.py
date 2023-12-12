@@ -23,9 +23,22 @@ class Cell:
             random.random() < bomb_chance
         )  # each cell has a chance of being a bomb
 
-    def draw(self):
+    def draw(self, screen):
         """This method is called in the main.py files draw_cells fkn"""
+        """Ritar ut enskilda cellerna och senare bomberna och siffrorna"""
         # Hint: Should draw each cell, i.e something to do with pygame.draw.rect
+        pygame.draw.rect( screen, self.color, (
+            self.x, 
+            self.y, 
+            self.width, 
+            self.height), 
+            self.cell_thickness
+            )
+
         # Later on in the assignment it will do more as well such as drawing X for bombs or writing digits
         # Important: Remember that pygame starts with (0,0) coordinate in upper left corner!
+        #screen.fill("black")
+        pass
+
+    def update(self):
         pass
