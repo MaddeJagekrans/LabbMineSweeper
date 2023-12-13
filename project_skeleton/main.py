@@ -20,9 +20,7 @@ font = pygame.font.Font(None, CELL_SIZE)
 
 pygame.display.set_caption("MineSweeper")
 
-
 cells = []
-#board = []
 
 def create_cells():
     """This function is meant to initially generate all the cells and create the boundaries"""
@@ -36,14 +34,6 @@ def create_cells():
             cell = Cell(cell_x, cell_y, width, height, bomb_chance, font)
 
             cells[cell_y].append(cell)
-   
-    # This is a good base to go from (think about it thoroughly before you code!! We want to create 16x16 list with each object being a cell):
-    #for a_row in range(amount_of_cells):
-     #   row = []
-      #  for a_column in range(amount_of_cells):
-       #     pass
-
-    pass
 
 
 def draw_cells():
@@ -68,6 +58,25 @@ def calc_cell_pos(position):
 
     return (center_x, center_y)
 
+def get_neighbouring_bombs(cell):
+    cell_x = cell.pos_x
+    cell_y = cell.pos_y
+    grid_size = len(cells)
+
+    neighbouring_bombs = 0
+
+    for y in range(max(0,cell_y - 1), min(grid_size,cell_y + 2)):
+        for x in range(max(0, cell_x - 1), min(grid_size, cell_x + 2)):
+            if cells[y][x].bomb:
+                neighbouring_bombs += 1
+
+    return neighbouring_bombs
+
+
+def on_click(cell):
+    cell.selected = True
+    cell.neighbouring_bombs = get_neighbouring_bombs(cell)
+
 
 def event_handler(event):
     """This function handles all events in the program"""
@@ -78,10 +87,10 @@ def event_handler(event):
         cell_grid_pos_x, cell_grid_pos_y = calc_cell_pos(pygame.mouse.get_pos())
         cell = cells[cell_grid_pos_y][cell_grid_pos_x]
         if cell.bomb:
-            terminate_program()
-            
-        cell.on_click()
+            pass
 
+        on_click(cell)
+        
 
 
 
